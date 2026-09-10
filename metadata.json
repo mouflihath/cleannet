@@ -1,0 +1,6 @@
+{
+  "name": "CleanNet",
+  "description": "Catalogue de présentation et gestion de produits d'entretien haut de gamme CleanNet.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
