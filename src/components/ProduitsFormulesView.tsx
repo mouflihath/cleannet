@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Product, RawMaterial, FormulaItem } from '../types';
 import { Calculator, Beaker, ShieldCheck, Layers, Plus, Edit2, Check, X, Trash2, ArrowRight } from 'lucide-react';
+import { ProductCarousel } from './ProductCarousel';
 
 interface ProduitsFormulesViewProps {
   products: Product[];
@@ -40,6 +41,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
   const [formShelfLife, setFormShelfLife] = useState('24 mois');
   const [formCostPerUnit, setFormCostPerUnit] = useState<number>(500);
   const [formFormula, setFormFormula] = useState<FormulaItem[]>([]);
+  const [formImages, setFormImages] = useState('');
 
   // Open modal for new product
   const handleOpenNewModal = () => {
@@ -54,6 +56,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
     setFormPackaging('Bidon de 1L avec bouchon verseur + Étiquette CleanNet');
     setFormShelfLife('24 mois');
     setFormCostPerUnit(550);
+    setFormImages('');
     // Initial formula template
     const defaultWater = rawMaterials.find(m => m.id === 'rm-eau-demineralisee');
     setFormFormula([
@@ -82,6 +85,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
     setFormShelfLife(activeProduct.shelfLife);
     setFormCostPerUnit(activeProduct.costPerUnit);
     setFormFormula([...activeProduct.formula]);
+    setFormImages((activeProduct.images || [activeProduct.image]).join('\n'));
     setShowProductModal(true);
   };
 
@@ -136,6 +140,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
         shelfLife: formShelfLife.trim(),
         costPerUnit: Number(formCostPerUnit) || 0,
         formula: formFormula,
+        images: formImages.split('\n').map((url) => url.trim()).filter(Boolean),
       };
       onUpdateProduct(updated);
     } else {
@@ -143,6 +148,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
         id: `prod-${Date.now()}`,
         name: formName.trim(),
         image: activeProduct?.image || '',
+        images: formImages.split('\n').map((url) => url.trim()).filter(Boolean),
         unitPrice: Number(formUnitPrice) || 0,
         unit: formUnit.trim(),
         priceFormatted: formPriceFormatted.trim() || `${formUnitPrice} FCFA`,
@@ -223,11 +229,10 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
           <div className="bg-white rounded-2xl border border-stone-200/80 p-6 shadow-sm">
             <div className="aspect-[3/4] w-full rounded-xl bg-[#F6F6F4] overflow-hidden mb-6 flex items-center justify-center">
               {activeProduct.image ? (
-                <img
-                  src={activeProduct.image}
-                  alt={activeProduct.name}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover"
+                <ProductCarousel
+                  name={activeProduct.name}
+                  image={activeProduct.image}
+                  images={activeProduct.images}
                 />
               ) : (
                 <div className="text-center p-6 text-stone-400">
@@ -328,7 +333,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
                   <span>Formule de composition standard (Base 100%)</span>
                 </h3>
                 <p className="text-xs text-stone-500 mt-0.5">
-                  Pourcentages massiques certifiés pour {activeProduct.name}
+                  Quantités de référence pour {activeProduct.name}
                 </p>
               </div>
               <div className="flex items-center space-x-2">
@@ -349,7 +354,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
                 <thead className="text-xs text-stone-500 uppercase tracking-wider border-b border-stone-100">
                   <tr>
                     <th className="pb-3 font-medium">Matière première</th>
-                    <th className="pb-3 font-medium text-right">Pourcentage (%)</th>
+                    <th className="pb-3 font-medium text-right">Quantité de référence</th>
                     <th className="pb-3 font-medium text-right">Unité</th>
                     <th className="pb-3 font-medium text-right">Stock actuel</th>
                   </tr>
@@ -363,7 +368,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
                           {item.materialName}
                         </td>
                         <td className="py-3 text-right font-mono text-stone-900 font-semibold">
-                          {item.percentage} %
+                          {item.referenceQuantity ?? `${item.percentage} %`}
                         </td>
                         <td className="py-3 text-right text-stone-500 text-xs">
                           {item.unit}
@@ -437,9 +442,14 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
                 </thead>
                 <tbody className="divide-y divide-stone-100">
                   {activeProduct.formula.map((item, idx) => {
-                    const requiredAmount = ((item.percentage / 100) * calcVolume).toFixed(2);
+                    const requiredAmount = (item.referenceQuantity
+                      ? item.referenceQuantity * (calcVolume / (activeProduct.formulaBaseVolume || 100))
+                      : (item.percentage / 100) * calcVolume).toFixed(2);
                     const material = rawMaterials.find((m) => m.id === item.materialId);
-                    const isAvailable = material ? material.currentStock >= Number(requiredAmount) : false;
+                    const stockAmount = ['g', 'ml'].includes(item.unit)
+                      ? Number(requiredAmount) / 1000
+                      : Number(requiredAmount);
+                    const isAvailable = material ? material.currentStock >= stockAmount : false;
 
                     return (
                       <tr key={idx} className="hover:bg-stone-50/50">
@@ -586,6 +596,22 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
                   onChange={(e) => setFormDescription(e.target.value)}
                   className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-medium text-stone-700 mb-1">
+                  Images du produit
+                </label>
+                <textarea
+                  rows={3}
+                  value={formImages}
+                  onChange={(e) => setFormImages(e.target.value)}
+                  placeholder="Une URL ou un chemin d'image par ligne"
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400"
+                />
+                <p className="mt-1 text-[11px] text-stone-400">
+                  Ajoutez plusieurs images en les séparant par un retour à la ligne.
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

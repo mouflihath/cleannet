@@ -164,7 +164,11 @@ export const FabricationView: React.FC<FabricationViewProps> = ({
     }
 
     const rawMaterial = rawMaterials.find((m) => m.id === targetMaterialId);
-    const needed = Number(((f.percentage / 100) * batchVolume).toFixed(2));
+    const referenceAmount = f.referenceQuantity ?? f.percentage;
+    const neededInFormulaUnit = Number((f.referenceQuantity
+      ? referenceAmount * (batchVolume / (activeProduct.formulaBaseVolume || 100))
+      : (referenceAmount / 100) * batchVolume).toFixed(2));
+    const needed = ['g', 'ml'].includes(f.unit) ? neededInFormulaUnit / 1000 : neededInFormulaUnit;
     const currentBaseStock = rawMaterial ? rawMaterial.currentStock : 0;
     const isSufficient = currentBaseStock >= needed;
     const remainingBaseStock = Math.max(0, Number((currentBaseStock - needed).toFixed(2)));

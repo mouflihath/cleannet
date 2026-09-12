@@ -7,12 +7,14 @@ export interface FormulaItem {
   materialName: string;
   percentage: number; // e.g. 5%
   unit: string;
+  referenceQuantity?: number;
 }
 
 export interface Product {
   id: string;
   name: string;
   image: string;
+  images?: string[];
   priceFormatted: string;
   unitPrice: number;
   unit: string;
@@ -21,6 +23,7 @@ export interface Product {
   ph: string;
   packaging: string;
   formula: FormulaItem[];
+  formulaBaseVolume?: number;
   costPerUnit: number;
   shelfLife: string;
 }

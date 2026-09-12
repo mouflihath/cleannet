@@ -14,7 +14,7 @@ export default function App() {
 
   // Dynamic state with localStorage persistence
   const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem('cleannet_products_v2');
+    const saved = localStorage.getItem('cleannet_products_v3');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -69,7 +69,7 @@ export default function App() {
 
   // Sync to localStorage
   useEffect(() => {
-    localStorage.setItem('cleannet_products_v2', JSON.stringify(products));
+    localStorage.setItem('cleannet_products_v3', JSON.stringify(products));
   }, [products]);
 
   useEffect(() => {

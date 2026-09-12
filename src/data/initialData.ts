@@ -1,6 +1,7 @@
 import { Product, RawMaterial, FabricationBatch, PurchaseOrder } from '../types';
 
 import imgLaveVitre from '../assets/images/cleannet_lave_vitre_1788983334122.jpg';
+import imgLaveVitreBrillance from '../assets/images/cleannet_lave_vitre_brillance_1788989127650.jpg';
 import imgLaveSol from '../assets/images/cleannet_lave_sol_1788983347384.jpg';
 import imgLaveMain from '../assets/images/cleannet_lave_main_1788983356709.jpg';
 import imgGelWc from '../assets/images/cleannet_gel_wc_1788983366984.jpg';
@@ -13,6 +14,7 @@ export const initialProducts: Product[] = [
     id: 'lave-vitre',
     name: 'Lave vitre',
     image: imgLaveVitre,
+    images: [imgLaveVitre, imgLaveVitreBrillance],
     priceFormatted: '1 200 FCFA / 750 ml',
     unitPrice: 1200,
     unit: 'flacon 750ml',
@@ -22,14 +24,18 @@ export const initialProducts: Product[] = [
     packaging: 'Flacon 750ml avec pulvérisateur + Étiquette CleanNet',
     shelfLife: '24 mois',
     costPerUnit: 420,
+    formulaBaseVolume: 10,
     formula: [
-      { materialId: 'rm-eau-demineralisee', materialName: "L'eau déminéralisée", percentage: 84.5, unit: 'L' },
-      { materialId: 'rm-ethanol', materialName: 'Ethanol', percentage: 9.0, unit: 'L' },
-      { materialId: 'rm-vinaigre-blanc', materialName: 'Vinaigre blanc', percentage: 4.0, unit: 'L' },
-      { materialId: 'rm-polysorbate-20', materialName: 'Polysorbate 20', percentage: 1.0, unit: 'kg' },
-      { materialId: 'rm-edta', materialName: 'EDTA', percentage: 0.3, unit: 'kg' },
-      { materialId: 'rm-col-bleu', materialName: 'Colorant Bleu', percentage: 0.2, unit: 'g' },
-      { materialId: 'rm-parfum-ocean', materialName: 'Parfum senteur Océan', percentage: 1.0, unit: 'L' }
+      { materialId: 'rm-eau-demineralisee', materialName: "Eau déminéralisée", percentage: 100, referenceQuantity: 10, unit: 'L' },
+      { materialId: 'rm-acide-citrique', materialName: 'Acide citrique', percentage: 0.1, referenceQuantity: 10, unit: 'g' },
+      { materialId: 'rm-vinaigre-blanc', materialName: 'Vinaigre blanc', percentage: 2, referenceQuantity: 200, unit: 'ml' },
+      { materialId: 'rm-ipa', materialName: 'IPA', percentage: 5, referenceQuantity: 500, unit: 'ml' },
+      { materialId: 'rm-ethanol', materialName: 'Éthanol', percentage: 7.5, referenceQuantity: 750, unit: 'ml' },
+      { materialId: 'rm-edta', materialName: 'EDTA', percentage: 0.1, referenceQuantity: 10, unit: 'g' },
+      { materialId: 'rm-polysorbate-80', materialName: 'Polysorbate 80', percentage: 0.3, referenceQuantity: 30, unit: 'ml' },
+      { materialId: 'rm-parfum-std', materialName: 'Parfum', percentage: 0.25, referenceQuantity: 25, unit: 'ml' },
+      { materialId: 'rm-phenoxyethanol', materialName: 'Phenoxyéthanol', percentage: 0.15, referenceQuantity: 15, unit: 'ml' },
+      { materialId: 'rm-col-bleu', materialName: 'Colorant', percentage: 0, unit: 'selon goût' }
     ]
   },
   {
@@ -69,15 +75,19 @@ export const initialProducts: Product[] = [
     packaging: 'Flacon pompe ambré 500ml + Étiquette CleanNet',
     shelfLife: '18 mois',
     costPerUnit: 690,
+    formulaBaseVolume: 10,
     formula: [
-      { materialId: 'rm-eau-demineralisee', materialName: "L'eau déminéralisée", percentage: 72.0, unit: 'L' },
-      { materialId: 'rm-texapon', materialName: 'Texapon ou salés', percentage: 14.0, unit: 'kg' },
-      { materialId: 'rm-sls', materialName: 'SLS', percentage: 3.0, unit: 'kg' },
-      { materialId: 'rm-glycerine', materialName: 'Glycérine', percentage: 4.5, unit: 'kg' },
-      { materialId: 'rm-monopropyle-glycol', materialName: 'Monopropyle glycole', percentage: 2.5, unit: 'kg' },
-      { materialId: 'rm-phenoxyethanol', materialName: 'Phenoxy éthanol', percentage: 0.8, unit: 'kg' },
-      { materialId: 'rm-col-rose', materialName: 'Colorant Rose', percentage: 0.2, unit: 'g' },
-      { materialId: 'rm-parfum-fraise', materialName: 'Parfum senteur Fraise', percentage: 3.0, unit: 'L' }
+      { materialId: 'rm-eau-demineralisee', materialName: "Eau déminéralisée", percentage: 100, referenceQuantity: 10, unit: 'L' },
+      { materialId: 'rm-texapon', materialName: 'Texapon', percentage: 7.5, referenceQuantity: 750, unit: 'g' },
+      { materialId: 'rm-sls', materialName: 'SLS', percentage: 5, referenceQuantity: 500, unit: 'g' },
+      { materialId: 'rm-booster', materialName: 'Booster', percentage: 3, referenceQuantity: 300, unit: 'ml' },
+      { materialId: 'rm-labsa', materialName: 'Acide sulphonic', percentage: 1, referenceQuantity: 100, unit: 'ml' },
+      { materialId: 'rm-glycerine', materialName: 'Glycérine', percentage: 1, referenceQuantity: 100, unit: 'ml' },
+      { materialId: 'rm-acide-citrique', materialName: 'Acide citrique (dilué dans l’eau chaude)', percentage: 0.1, referenceQuantity: 10, unit: 'g' },
+      { materialId: 'rm-sulfate-sodium', materialName: 'Sulfate de sodium', percentage: 5, referenceQuantity: 500, unit: 'g' },
+      { materialId: 'rm-parfum-std', materialName: 'Parfum', percentage: 0.2, referenceQuantity: 20, unit: 'ml' },
+      { materialId: 'rm-col-rose', materialName: 'Colorant', percentage: 0, unit: 'selon goût' },
+      { materialId: 'rm-binzoate', materialName: 'Benzoate', percentage: 0.05, referenceQuantity: 5, unit: 'g' }
     ]
   },
   {
@@ -93,14 +103,15 @@ export const initialProducts: Product[] = [
     packaging: 'Flacon coudé 750ml sécurisé + Étiquette CleanNet',
     shelfLife: '24 mois',
     costPerUnit: 520,
+    formulaBaseVolume: 5,
     formula: [
-      { materialId: 'rm-eau-demineralisee', materialName: "L'eau déminéralisée", percentage: 75.0, unit: 'L' },
-      { materialId: 'rm-acide-chlorhydrique', materialName: 'Acide chlorhydrique HCL', percentage: 8.0, unit: 'L' },
-      { materialId: 'rm-acide-citrique', materialName: 'Acide citrique', percentage: 5.0, unit: 'kg' },
-      { materialId: 'rm-acide-thikner', materialName: 'Acide thikner', percentage: 6.0, unit: 'kg' },
-      { materialId: 'rm-cristaux-menthe', materialName: 'Cristaux de menthe', percentage: 1.5, unit: 'kg' },
-      { materialId: 'rm-col-bleu', materialName: 'Colorant Bleu', percentage: 0.5, unit: 'g' },
-      { materialId: 'rm-booster', materialName: 'Booster', percentage: 4.0, unit: 'kg' }
+      { materialId: 'rm-eau-demineralisee', materialName: "Eau déminéralisée", percentage: 100, referenceQuantity: 5, unit: 'L' },
+      { materialId: 'rm-acide-citrique', materialName: 'Acide citrique', percentage: 2, referenceQuantity: 100, unit: 'g' },
+      { materialId: 'rm-acide-chlorhydrique', materialName: 'HCL', percentage: 15, referenceQuantity: 750, unit: 'ml' },
+      { materialId: 'rm-edta', materialName: 'EDTA', percentage: 0.2, referenceQuantity: 10, unit: 'g' },
+      { materialId: 'rm-parfum-std', materialName: 'Parfum', percentage: 0.06, referenceQuantity: 3, unit: 'ml' },
+      { materialId: 'rm-acide-thikner', materialName: 'Acide thickener', percentage: 4, referenceQuantity: 200, unit: 'ml' },
+      { materialId: 'rm-col-bleu', materialName: 'Colorant', percentage: 0, unit: 'selon goût' }
     ]
   },
   {
@@ -116,15 +127,23 @@ export const initialProducts: Product[] = [
     packaging: 'Flacon 750ml avec vaporisateur + Étiquette CleanNet',
     shelfLife: '24 mois',
     costPerUnit: 540,
+    formulaBaseVolume: 20,
     formula: [
-      { materialId: 'rm-eau-demineralisee', materialName: "L'eau déminéralisée", percentage: 81.0, unit: 'L' },
-      { materialId: 'rm-texapon', materialName: 'Texapon ou salés', percentage: 6.0, unit: 'kg' },
-      { materialId: 'rm-vinaigre-blanc', materialName: 'Vinaigre blanc', percentage: 3.5, unit: 'L' },
-      { materialId: 'rm-carbonate-sodium', materialName: 'Carbonate de sodium', percentage: 2.0, unit: 'kg' },
-      { materialId: 'rm-polysorbate-80', materialName: 'Polysorbate 80', percentage: 2.5, unit: 'kg' },
-      { materialId: 'rm-binzoate', materialName: 'Binzoate', percentage: 0.5, unit: 'kg' },
-      { materialId: 'rm-col-orange', materialName: 'Colorant Orange', percentage: 0.5, unit: 'g' },
-      { materialId: 'rm-parfum-agrumes', materialName: 'Parfum senteur Agrumes', percentage: 4.0, unit: 'L' }
+      { materialId: 'rm-eau-demineralisee', materialName: "Eau déminéralisée", percentage: 100, referenceQuantity: 20, unit: 'L' },
+      { materialId: 'rm-texapon', materialName: 'Texapon', percentage: 1.25, referenceQuantity: 250, unit: 'g' },
+      { materialId: 'rm-sulfate-sodium', materialName: 'Sulfate de sodium', percentage: 1.5, referenceQuantity: 300, unit: 'g' },
+      { materialId: 'rm-hplc', materialName: 'HPMC', percentage: 0.45, referenceQuantity: 90, unit: 'g' },
+      { materialId: 'rm-sls', materialName: 'SLS', percentage: 0.625, referenceQuantity: 125, unit: 'g' },
+      { materialId: 'rm-labsa', materialName: 'Acide sulfonique', percentage: 2.5, referenceQuantity: 500, unit: 'ml' },
+      { materialId: 'rm-stpp', materialName: 'Tripolyphosphate de sodium', percentage: 0.625, referenceQuantity: 125, unit: 'g' },
+      { materialId: 'rm-carbonate-sodium', materialName: 'Carbonate de sodium', percentage: 0.625, referenceQuantity: 125, unit: 'g' },
+      { materialId: 'rm-booster', materialName: 'Booster', percentage: 1.25, referenceQuantity: 250, unit: 'ml' },
+      { materialId: 'rm-glycerine', materialName: 'Glycérine', percentage: 0.5, referenceQuantity: 100, unit: 'ml' },
+      { materialId: 'rm-soude-caustique', materialName: 'Soude caustique', percentage: 0.2, referenceQuantity: 40, unit: 'g' },
+      { materialId: 'rm-parfum-std', materialName: 'Parfum', percentage: 0.125, referenceQuantity: 25, unit: 'ml' },
+      { materialId: 'rm-formalin', materialName: 'Formalin', percentage: 0.125, referenceQuantity: 25, unit: 'ml' },
+      { materialId: 'rm-sugar', materialName: 'Sugar', percentage: 0.125, referenceQuantity: 25, unit: 'g' },
+      { materialId: 'rm-col-orange', materialName: 'Colorant', percentage: 0, unit: 'selon goût' }
     ]
   },
   {
@@ -140,13 +159,14 @@ export const initialProducts: Product[] = [
     packaging: 'Flacon aluminium brossé 300ml + Étiquette CleanNet',
     shelfLife: '36 mois',
     costPerUnit: 750,
+    formulaBaseVolume: 1,
     formula: [
-      { materialId: 'rm-eau-demineralisee', materialName: "L'eau déminéralisée", percentage: 76.0, unit: 'L' },
-      { materialId: 'rm-ethanol', materialName: 'Ethanol', percentage: 12.0, unit: 'L' },
-      { materialId: 'rm-polysorbate-20', materialName: 'Polysorbate 20', percentage: 3.0, unit: 'kg' },
-      { materialId: 'rm-monopropyle-glycol', materialName: 'Monopropyle glycole', percentage: 2.0, unit: 'kg' },
-      { materialId: 'rm-phenoxyethanol', materialName: 'Phenoxy éthanol', percentage: 0.5, unit: 'kg' },
-      { materialId: 'rm-parfum-lavande', materialName: 'Parfum senteur Lavande', percentage: 6.5, unit: 'L' }
+      { materialId: 'rm-eau-demineralisee', materialName: "Eau déminéralisée", percentage: 50, referenceQuantity: 500, unit: 'ml' },
+      { materialId: 'rm-parfum-std', materialName: 'Parfum', percentage: 3, referenceQuantity: 30, unit: 'ml' },
+      { materialId: 'rm-polysorbate-20', materialName: 'Polysorbate 20', percentage: 3.5, referenceQuantity: 35, unit: 'ml' },
+      { materialId: 'rm-ethanol', materialName: 'Éthanol', percentage: 40, referenceQuantity: 400, unit: 'ml' },
+      { materialId: 'rm-phenoxyethanol', materialName: 'Phenoxyéthanol', percentage: 0.2, referenceQuantity: 2, unit: 'ml' },
+      { materialId: 'rm-dpg', materialName: 'Dipropylene Glycol (DPG)', percentage: 1, referenceQuantity: 10, unit: 'ml' }
     ]
   },
   {
@@ -188,7 +208,7 @@ export const initialRawMaterials: RawMaterial[] = [
   { id: 'rm-carbonate-sodium', name: 'Carbonate de sodium', code: 'MP-CAR-08', category: 'Sels & Séquestrants', unit: 'kg', currentStock: 250, minStock: 100, unitCost: 850, supplier: 'AfriChimie Distri' },
   { id: 'rm-sulfate-sodium', name: 'Sulfate de sodium', code: 'MP-SUL-09', category: 'Sels & Séquestrants', unit: 'kg', currentStock: 300, minStock: 150, unitCost: 750, supplier: 'AfriChimie Distri' },
   { id: 'rm-edta', name: 'EDTA', code: 'MP-EDT-10', category: 'Sels & Séquestrants', unit: 'kg', currentStock: 65, minStock: 50, unitCost: 3400, supplier: 'BioChimie Solutions' },
-  { id: 'rm-hplc', name: 'HPLC', code: 'MP-HPL-11', category: 'Épaississants & Polymères', unit: 'kg', currentStock: 40, minStock: 40, unitCost: 4200, supplier: 'Polymères Verts' },
+  { id: 'rm-hplc', name: 'HPMC', code: 'MP-HPL-11', category: 'Épaississants & Polymères', unit: 'kg', currentStock: 40, minStock: 40, unitCost: 4200, supplier: 'Polymères Verts' },
   { id: 'rm-nitrosol', name: 'Nitrosol', code: 'MP-NIT-12', category: 'Épaississants & Polymères', unit: 'kg', currentStock: 85, minStock: 50, unitCost: 4800, supplier: 'Polymères Verts' },
   { id: 'rm-binzoate', name: 'Binzoate', code: 'MP-BIN-13', category: 'Conservateurs', unit: 'kg', currentStock: 75, minStock: 40, unitCost: 3200, supplier: 'BioChimie Solutions' },
   { id: 'rm-booster', name: 'Booster', code: 'MP-BST-14', category: 'Agents moussants & Boosters', unit: 'kg', currentStock: 110, minStock: 70, unitCost: 2600, supplier: 'BioChimie Solutions' },
@@ -216,6 +236,8 @@ export const initialRawMaterials: RawMaterial[] = [
   { id: 'rm-formalin', name: 'Formalin', code: 'MP-FOR-24', category: 'Conservateurs', unit: 'L', currentStock: 45, minStock: 30, unitCost: 1900, supplier: 'AfriChimie Distri' },
   { id: 'rm-polysorbate-80', name: 'Polysorbate 80', code: 'MP-P80-25', category: 'Tensioactifs & Bases', unit: 'kg', currentStock: 55, minStock: 30, unitCost: 3900, supplier: 'BioChimie Solutions' },
   { id: 'rm-polysorbate-20', name: 'Polysorbate 20', code: 'MP-P20-26', category: 'Tensioactifs & Bases', unit: 'kg', currentStock: 50, minStock: 30, unitCost: 3900, supplier: 'BioChimie Solutions' },
+  { id: 'rm-ipa', name: 'IPA', code: 'MP-IPA-28', category: 'Solvants & Auxiliaires', unit: 'L', currentStock: 80, minStock: 30, unitCost: 2400, supplier: 'AfriChimie Distri' },
+  { id: 'rm-dpg', name: 'Dipropylene Glycol (DPG)', code: 'MP-DPG-29', category: 'Solvants & Auxiliaires', unit: 'L', currentStock: 35, minStock: 15, unitCost: 3200, supplier: 'AfriChimie Distri' },
 
   // Parfums séparément
   { id: 'rm-parfum-fraise', name: 'Parfum senteur fraise', code: 'PRF-FRA', category: 'Parfums & Fragrances', unit: 'L', currentStock: 25, minStock: 15, unitCost: 9200, supplier: 'Essences Naturelles Grasse' },

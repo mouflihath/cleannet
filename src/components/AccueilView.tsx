@@ -1,5 +1,6 @@
 import React from 'react';
 import { Product } from '../types';
+import { ProductCarousel } from './ProductCarousel';
 
 interface AccueilViewProps {
   products: Product[];
@@ -29,12 +30,7 @@ export const AccueilView: React.FC<AccueilViewProps> = ({ products, onSelectProd
             >
               {/* IMAGE DU PRODUIT */}
               <div className="relative aspect-[3/4] w-full bg-[#F6F6F4] overflow-hidden flex items-center justify-center">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  referrerPolicy="no-referrer"
-                  className="w-full h-full object-cover object-center transform group-hover:scale-102 transition-transform duration-500 ease-out"
-                />
+                <ProductCarousel name={product.name} image={product.image} images={product.images} compact />
               </div>
 
               {/* INFORMATIONS ESSENTIELLES : NOM & PRIX */}
