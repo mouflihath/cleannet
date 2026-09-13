@@ -51,16 +51,7 @@ export default function App() {
     const saved = localStorage.getItem('cleannet_google_user');
     return saved ? JSON.parse(saved) : null;
   });
-  const [notificationsEnabled, setNotificationsEnabled] = useState<boolean>(() => (
-    localStorage.getItem('cleannet_notifications_enabled') !== 'false'
-  ));
   const googleLoginPanelRef = useRef<HTMLDivElement>(null);
-  const gmailTokenClient = useRef<{ requestAccessToken: (options?: { prompt?: string }) => void } | null>(null);
-  const gmailAccessToken = useRef<string | null>(null);
-  const gmailRequestPending = useRef(false);
-  const gmailAuthorizationRequested = useRef(false);
-  const pendingGmailAction = useRef<{ subject: string; message: string } | null>(null);
-  const [actionNotification, setActionNotification] = useState<string | null>(null);
 
   const handleGoogleLogin = (credential: string) => {
     try {
@@ -76,63 +67,7 @@ export default function App() {
   const handleGoogleLogout = () => {
     setGoogleUser(null);
     localStorage.removeItem('cleannet_google_user');
-    gmailAccessToken.current = null;
-    gmailTokenClient.current = null;
-    gmailAuthorizationRequested.current = false;
-    pendingGmailAction.current = null;
     window.google?.accounts.id.disableAutoSelect();
-  };
-
-  useEffect(() => {
-    if (!googleUser || !notificationsEnabled || !window.google?.accounts.oauth2 || gmailAuthorizationRequested.current) return;
-    gmailAuthorizationRequested.current = true;
-    gmailTokenClient.current = window.google.accounts.oauth2.initTokenClient({
-      client_id: GOOGLE_CLIENT_ID,
-      scope: 'https://www.googleapis.com/auth/gmail.send',
-      callback: (response) => {
-        gmailRequestPending.current = false;
-        if (response.access_token) {
-          gmailAccessToken.current = response.access_token;
-          setActionNotification('Gmail est prêt : vos actions seront enregistrées automatiquement.');
-          const pendingAction = pendingGmailAction.current;
-          pendingGmailAction.current = null;
-          if (pendingAction) void sendGmailMessage(response.access_token, pendingAction);
-          window.setTimeout(() => setActionNotification(null), 5000);
-        }
-      },
-    });
-  }, [googleUser, notificationsEnabled]);
-
-  const sendGmailMessage = async (accessToken: string, action: { subject: string; message: string }) => {
-    if (!googleUser) return;
-    const rawMessage = [`To: ${googleUser.email}`, 'Content-Type: text/plain; charset="UTF-8"', `Subject: ${action.subject}`, '', action.message].join('\r\n');
-    const encodedMessage = btoa(unescape(encodeURIComponent(rawMessage))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-    setActionNotification('Enregistrement de l’action dans votre Gmail...');
-    try {
-      const response = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ raw: encodedMessage }),
-      });
-      setActionNotification(response.ok ? 'Action ajoutée dans votre Gmail.' : 'Gmail n’a pas accepté l’action.');
-    } catch {
-      setActionNotification('Gmail est momentanément indisponible.');
-    }
-    window.setTimeout(() => setActionNotification(null), 5000);
-  };
-
-  const notifyByGmail = (subject: string, message: string) => {
-    pendingGmailAction.current = { subject, message };
-    if (!googleUser || !notificationsEnabled || !gmailTokenClient.current) {
-      setActionNotification('Connectez-vous à Google et autorisez Gmail une seule fois pour activer la sauvegarde automatique.');
-      return;
-    }
-    pendingGmailAction.current = { subject, message };
-    if (gmailRequestPending.current) return;
-    gmailAccessToken.current = null;
-    gmailRequestPending.current = true;
-    gmailTokenClient.current.requestAccessToken({ prompt: 'consent' });
-    setActionNotification('Autorisez Gmail pour enregistrer cette action.');
   };
 
   // Dynamic state with localStorage persistence
@@ -446,11 +381,6 @@ export default function App() {
 
       {/* Vues de l'application */}
       <main className="flex-grow">
-        {actionNotification && (
-          <div className="fixed right-4 top-24 z-50 max-w-sm rounded-xl border border-emerald-200 bg-white px-4 py-3 text-sm text-emerald-800 shadow-lg">
-            {actionNotification}
-          </div>
-        )}
         {activeTab === 'accueil' && (
           <AccueilView
             products={products}
@@ -467,7 +397,7 @@ export default function App() {
             onGoToFabrication={handleGoToFabrication}
             onAddProduct={handleAddProduct}
             onUpdateProduct={handleUpdateProduct}
-            onActionRecorded={notifyByGmail}
+            onActionRecorded={() => undefined}
           />
         )}
 
@@ -492,7 +422,7 @@ export default function App() {
             onExecuteBatch={handleExecuteBatch}
             onQuickRestock={handleQuickRestock}
             onClearHistory={handleClearFabricationHistory}
-            onActionRecorded={notifyByGmail}
+            onActionRecorded={() => undefined}
           />
         )}
 
@@ -504,7 +434,7 @@ export default function App() {
             onReceiveOrder={handleReceiveOrder}
             targetMaterialId={targetPurchaseMaterialId}
             onClearHistory={handleClearPurchaseHistory}
-            onActionRecorded={notifyByGmail}
+            onActionRecorded={() => undefined}
           />
         )}
       </main>

@@ -22,9 +22,6 @@ declare global {
           prompt: () => void;
           disableAutoSelect: () => void;
         };
-        oauth2: {
-          initTokenClient: (options: { client_id: string; scope: string; callback: (response: { access_token?: string; error?: string }) => void }) => { requestAccessToken: (options?: { prompt?: string }) => void };
-        };
       };
     };
   }
