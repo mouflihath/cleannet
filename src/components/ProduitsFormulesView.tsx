@@ -11,6 +11,7 @@ interface ProduitsFormulesViewProps {
   onGoToFabrication: (productId: string, batchSize: number) => void;
   onAddProduct: (newProduct: Product) => void;
   onUpdateProduct: (updatedProduct: Product) => void;
+  onActionRecorded?: (subject: string, message: string) => void;
 }
 
 export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
@@ -21,6 +22,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
   onGoToFabrication,
   onAddProduct,
   onUpdateProduct,
+  onActionRecorded,
 }) => {
   const activeProduct = products.find((p) => p.id === selectedProductId) || products[0] || null;
   const [calcVolume, setCalcVolume] = useState<number>(100);
@@ -42,6 +44,20 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
   const [formCostPerUnit, setFormCostPerUnit] = useState<number>(500);
   const [formFormula, setFormFormula] = useState<FormulaItem[]>([]);
   const [formImages, setFormImages] = useState('');
+
+  const handleGalleryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []).filter((file) => file.type.startsWith('image/'));
+    if (files.length === 0) return;
+
+    Promise.all(files.map((file) => new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    }))).then((images) => {
+      setFormImages(images.join('\n'));
+    });
+  };
 
   // Open modal for new product
   const handleOpenNewModal = () => {
@@ -125,33 +141,40 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
   const handleSaveProduct = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formName.trim()) return;
+    const savedPrice = Number(formUnitPrice) || 0;
+    const savedUnit = formUnit.trim() || 'bidon 1L';
+    const savedPriceFormatted = `${savedPrice.toLocaleString('fr-FR')} FCFA / ${savedUnit}`;
 
     if (isEditing && activeProduct) {
+      const selectedImages = formImages.split('\n').map((url) => url.trim()).filter(Boolean);
       const updated: Product = {
         ...activeProduct,
         name: formName.trim(),
-        category: formCategory.trim(),
-        unitPrice: Number(formUnitPrice) || 0,
-        unit: formUnit.trim(),
-        priceFormatted: formPriceFormatted.trim() || `${formUnitPrice} FCFA`,
-        description: formDescription.trim(),
-        ph: formPh.trim(),
-        packaging: formPackaging.trim(),
-        shelfLife: formShelfLife.trim(),
+        image: selectedImages[0] || activeProduct.image,
+        category: formCategory.trim() || activeProduct.category,
+        unitPrice: savedPrice,
+        unit: savedUnit,
+        priceFormatted: savedPriceFormatted,
+        description: formDescription.trim() || activeProduct.description,
+        ph: formPh.trim() || activeProduct.ph,
+        packaging: formPackaging.trim() || activeProduct.packaging,
+        shelfLife: formShelfLife.trim() || activeProduct.shelfLife,
         costPerUnit: Number(formCostPerUnit) || 0,
         formula: formFormula,
-        images: formImages.split('\n').map((url) => url.trim()).filter(Boolean),
+        images: selectedImages,
       };
       onUpdateProduct(updated);
+      onActionRecorded?.('CleanNet - produit modifié', `Le produit "${updated.name}" a été modifié dans CleanNet le ${new Date().toLocaleString('fr-FR')}.`);
     } else {
+      const selectedImages = formImages.split('\n').map((url) => url.trim()).filter(Boolean);
       const newProduct: Product = {
         id: `prod-${Date.now()}`,
         name: formName.trim(),
-        image: activeProduct?.image || '',
-        images: formImages.split('\n').map((url) => url.trim()).filter(Boolean),
-        unitPrice: Number(formUnitPrice) || 0,
-        unit: formUnit.trim(),
-        priceFormatted: formPriceFormatted.trim() || `${formUnitPrice} FCFA`,
+        image: selectedImages[0] || '',
+        images: selectedImages,
+        unitPrice: savedPrice,
+        unit: savedUnit,
+        priceFormatted: savedPriceFormatted,
         category: formCategory.trim(),
         description: formDescription.trim(),
         ph: formPh.trim(),
@@ -161,6 +184,7 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
         formula: formFormula,
       };
       onAddProduct(newProduct);
+      onActionRecorded?.('CleanNet - produit ajouté', `Le produit "${newProduct.name}" a été ajouté dans CleanNet le ${new Date().toLocaleString('fr-FR')}.`);
       onSelectProduct(newProduct.id);
     }
 
@@ -602,16 +626,23 @@ export const ProduitsFormulesView: React.FC<ProduitsFormulesViewProps> = ({
                 <label className="block text-xs font-medium text-stone-700 mb-1">
                   Images du produit
                 </label>
-                <textarea
-                  rows={3}
-                  value={formImages}
-                  onChange={(e) => setFormImages(e.target.value)}
-                  placeholder="Une URL ou un chemin d'image par ligne"
-                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400"
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleGalleryChange}
+                  className="w-full px-3 py-2 bg-stone-50 border border-stone-200 rounded-xl text-sm focus:outline-none focus:border-stone-400 file:mr-3 file:rounded-lg file:border-0 file:bg-stone-900 file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-white"
                 />
                 <p className="mt-1 text-[11px] text-stone-400">
-                  Ajoutez plusieurs images en les séparant par un retour à la ligne.
+                  Sélectionnez une ou plusieurs images depuis votre galerie.
                 </p>
+                {formImages && (
+                  <div className="mt-2 grid grid-cols-4 gap-2">
+                    {formImages.split('\n').filter(Boolean).map((image, index) => (
+                      <img key={`${image}-${index}`} src={image} alt={`Aperçu ${index + 1}`} className="h-16 w-full rounded-lg object-cover border border-stone-200" />
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-3">

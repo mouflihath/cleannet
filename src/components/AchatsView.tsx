@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { RawMaterial, PurchaseOrder, PurchaseOrderItem } from '../types';
-import { ShoppingCart, Plus, Check, Clock, Building2, PackageCheck } from 'lucide-react';
+import { ShoppingCart, Plus, Check, Clock, Building2, PackageCheck, Trash2 } from 'lucide-react';
 
 interface AchatsViewProps {
   purchaseOrders: PurchaseOrder[];
   rawMaterials: RawMaterial[];
-  onCreateOrder: (order: PurchaseOrder, autoCredit?: boolean) => void;
+  onCreateOrder: (order: PurchaseOrder) => void;
   onReceiveOrder: (orderId: string) => void;
   targetMaterialId?: string | null;
+  onClearHistory?: () => void;
+  onActionRecorded?: (subject: string, message: string) => void;
 }
 
 export const AchatsView: React.FC<AchatsViewProps> = ({
@@ -16,12 +18,13 @@ export const AchatsView: React.FC<AchatsViewProps> = ({
   onCreateOrder,
   onReceiveOrder,
   targetMaterialId,
+  onClearHistory,
+  onActionRecorded,
 }) => {
   const [showNewOrderModal, setShowNewOrderModal] = useState(Boolean(targetMaterialId));
   const [selectedSupplier, setSelectedSupplier] = useState('BioChimie Solutions');
   const [selectedMaterialId, setSelectedMaterialId] = useState(targetMaterialId || rawMaterials[0]?.id || '');
   const [quantity, setQuantity] = useState<number>(100);
-  const [autoCredit, setAutoCredit] = useState<boolean>(true);
   const [feedbackSuccess, setFeedbackSuccess] = useState<string | null>(null);
 
   const suppliers = Array.from(new Set(rawMaterials.map((m) => m.supplier)));
@@ -52,21 +55,16 @@ export const AchatsView: React.FC<AchatsViewProps> = ({
       date: new Date().toLocaleDateString('fr-FR'),
       items: [newItem],
       totalAmount: totalCost,
-      status: autoCredit ? 'received' : 'pending',
+      status: 'received',
     };
 
-    onCreateOrder(newOrder, autoCredit);
+    onCreateOrder(newOrder);
+    onActionRecorded?.('CleanNet - achat enregistré', `Achat enregistré : ${quantity} ${selectedMaterial.unit} de ${selectedMaterial.name}, commande ${newOrder.orderNumber}, le ${newOrder.date}.`);
     setShowNewOrderModal(false);
 
-    if (autoCredit) {
-      setFeedbackSuccess(
-        `✓ Achat validé et réceptionné ! +${quantity} ${selectedMaterial.unit} ont été directement ajoutés au stock de "${selectedMaterial.name}". Le stock passe de ${currentStock} à ${newStockPreview} ${selectedMaterial.unit}.`
-      );
-    } else {
-      setFeedbackSuccess(
-        `✓ Bon de commande ${newOrder.orderNumber} créé en attente de livraison pour ${selectedMaterial.name}.`
-      );
-    }
+    setFeedbackSuccess(
+      `✓ Achat validé et réceptionné ! +${quantity} ${selectedMaterial.unit} ont été directement ajoutés au stock de "${selectedMaterial.name}". Le stock passe de ${currentStock} à ${newStockPreview} ${selectedMaterial.unit}.`
+    );
     setTimeout(() => setFeedbackSuccess(null), 6000);
   };
 
@@ -195,25 +193,13 @@ export const AchatsView: React.FC<AchatsViewProps> = ({
               </div>
             </div>
 
-            {/* Auto credit checkbox & submit */}
+            {/* Submit */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-              <label className="flex items-center space-x-2 text-xs text-stone-700 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={autoCredit}
-                  onChange={(e) => setAutoCredit(e.target.checked)}
-                  className="rounded border-stone-300 text-stone-900 focus:ring-stone-500"
-                />
-                <span className="font-medium">
-                  Ajouter et créditer immédiatement au stock disponible à la validation
-                </span>
-              </label>
-
               <button
                 type="submit"
                 className="px-5 py-2.5 bg-stone-900 hover:bg-stone-800 text-stone-50 rounded-xl text-xs font-medium transition-colors whitespace-nowrap shadow-sm"
               >
-                Valider l'achat & créditer le stock (+{quantity} {selectedMaterial?.unit})
+                Valider l'achat et créditer le stock (+{quantity} {selectedMaterial?.unit})
               </button>
             </div>
           </form>
@@ -222,6 +208,24 @@ export const AchatsView: React.FC<AchatsViewProps> = ({
 
       {/* Orders List */}
       <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold text-stone-900">Historique des achats</h2>
+          {onClearHistory && purchaseOrders.length > 0 && (
+            <button
+              type="button"
+              onClick={onClearHistory}
+              className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-600 hover:text-rose-800"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>Vider l’historique</span>
+            </button>
+          )}
+        </div>
+        {purchaseOrders.length === 0 && (
+          <div className="bg-white rounded-2xl border border-stone-200/80 p-8 text-center text-sm text-stone-400">
+            Aucun achat enregistré.
+          </div>
+        )}
         {purchaseOrders.map((order) => {
           const isReceived = order.status === 'received';
           return (

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavTab } from '../types';
 import { Home, Sparkles, Layers, Factory, ShoppingCart, Menu, X } from 'lucide-react';
 
@@ -6,10 +6,54 @@ interface HeaderProps {
   activeTab: NavTab;
   onSelectTab?: (tab: NavTab) => void;
   onNavigate?: (tab: NavTab) => void;
+  googleUser?: { name: string; email: string; picture?: string } | null;
+  onGoogleLogin?: (credential: string) => void;
+  onGoogleLogout?: () => void;
+  authButtonTargetRef?: React.RefObject<HTMLDivElement | null>;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNavigate }) => {
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (options: { client_id: string; callback: (response: { credential: string }) => void }) => void;
+          renderButton: (element: HTMLElement, options: Record<string, string>) => void;
+          prompt: () => void;
+          disableAutoSelect: () => void;
+        };
+        oauth2: {
+          initTokenClient: (options: { client_id: string; scope: string; callback: (response: { access_token?: string; error?: string }) => void }) => { requestAccessToken: (options?: { prompt?: string }) => void };
+        };
+      };
+    };
+  }
+}
+
+export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNavigate, googleUser, onGoogleLogin, onGoogleLogout, authButtonTargetRef }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const googleButtonRef = useRef<HTMLDivElement>(null);
+  const mobileGoogleButtonRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!onGoogleLogin || googleUser || !window.google) return;
+    window.google.accounts.id.initialize({
+      client_id: '362664635286-sfa3cescvt9nu6tltel783rmd4ilht4u.apps.googleusercontent.com',
+      callback: ({ credential }) => onGoogleLogin(credential),
+    });
+    const buttonOptions = {
+      type: 'standard',
+      theme: 'filled_blue',
+      size: 'large',
+      text: 'signin_with',
+      shape: 'pill',
+    };
+    [googleButtonRef.current, mobileGoogleButtonRef.current, authButtonTargetRef?.current].forEach((container) => {
+      if (!container) return;
+      container.innerHTML = '';
+      window.google?.accounts.id.renderButton(container, buttonOptions);
+    });
+  }, [googleUser, onGoogleLogin]);
 
   const navItems: { id: NavTab; label: string; icon: React.ReactNode }[] = [
     { id: 'accueil', label: 'Accueil', icon: <Home className="w-4 h-4" /> },
@@ -47,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
           </button>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          {googleUser && <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
@@ -68,18 +112,38 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
                 </button>
               );
             })}
-          </nav>
+          </nav>}
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              id="mobile-menu-toggle"
-              className="p-2 rounded-lg text-stone-600 hover:text-stone-900 hover:bg-stone-100 focus:outline-none"
-              aria-label="Menu"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
+          <div className="hidden md:flex items-center gap-2">
+            {googleUser ? (
+              <button type="button" onClick={onGoogleLogout} className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1 text-xs text-stone-700 hover:border-stone-400" title="Se déconnecter">
+                {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full" />}
+                <span className="max-w-28 truncate">{googleUser.name}</span>
+              </button>
+            ) : (
+              <div ref={googleButtonRef} />
+            )}
+          </div>
+
+          {/* Mobile account and menu */}
+          <div className="md:hidden flex items-center gap-2">
+            {!googleUser ? (
+              <div ref={mobileGoogleButtonRef} className="min-h-10 max-w-[190px]" />
+            ) : (
+              <>
+                <button type="button" onClick={onGoogleLogout} className="flex items-center rounded-full border border-stone-200 bg-white p-1" title="Se déconnecter">
+                  {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full" />}
+                </button>
+                <button
+                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                  id="mobile-menu-toggle"
+                  className="p-2 rounded-lg text-stone-600 hover:text-stone-900 hover:bg-stone-100 focus:outline-none"
+                  aria-label="Menu"
+                >
+                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

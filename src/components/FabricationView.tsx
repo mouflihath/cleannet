@@ -14,7 +14,8 @@ import {
   ArrowRight,
   Sparkles,
   Layers,
-  Check
+  Check,
+  Trash2
 } from 'lucide-react';
 
 interface FabricationViewProps {
@@ -25,6 +26,8 @@ interface FabricationViewProps {
   preselectedBatchSize?: number;
   onExecuteBatch: (newBatch: FabricationBatch, deductions: { materialId: string; amount: number }[]) => void;
   onQuickRestock?: (materialId: string, amount: number) => void;
+  onClearHistory?: () => void;
+  onActionRecorded?: (subject: string, message: string) => void;
 }
 
 interface LastExecutionSummary {
@@ -50,6 +53,8 @@ export const FabricationView: React.FC<FabricationViewProps> = ({
   preselectedBatchSize,
   onExecuteBatch,
   onQuickRestock,
+  onClearHistory,
+  onActionRecorded,
 }) => {
   const [selectedProductId, setSelectedProductId] = useState<string>(
     preselectedProductId || products[0]?.id || ''
@@ -242,6 +247,7 @@ export const FabricationView: React.FC<FabricationViewProps> = ({
 
     // Perform deduction in App state
     onExecuteBatch(newBatch, deductions);
+    onActionRecorded?.('CleanNet - fabrication enregistrée', `Fabrication enregistrée : ${batchVolume} L de ${activeProduct.name}, lot ${newBatch.batchNumber}, le ${newBatch.date}.`);
 
     // Save detailed execution summary for transparency
     const summaryData: LastExecutionSummary = {
@@ -607,15 +613,6 @@ export const FabricationView: React.FC<FabricationViewProps> = ({
                             <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-rose-50 text-rose-700 border border-rose-200/60">
                               Manque {req.deficit} {req.unit}
                             </span>
-                            {onQuickRestock && (
-                              <button
-                                onClick={() => onQuickRestock(req.materialId, req.deficit + 20)}
-                                className="px-2 py-0.5 text-[10px] font-medium bg-stone-900 text-stone-50 rounded hover:bg-stone-800 transition-colors"
-                                title="Réapprovisionner immédiatement"
-                              >
-                                + Ajouter
-                              </button>
-                            )}
                           </div>
                         )}
                       </td>
@@ -628,10 +625,22 @@ export const FabricationView: React.FC<FabricationViewProps> = ({
 
           {/* History of Completed Batches */}
           <div className="bg-white rounded-2xl border border-stone-200/80 p-6 shadow-sm">
-            <h3 className="text-base font-semibold text-stone-900 mb-1 flex items-center space-x-2">
-              <History className="w-4 h-4 text-stone-500" />
-              <span>Historique des fabrications & traçabilité</span>
-            </h3>
+            <div className="flex items-start justify-between gap-3 mb-1">
+              <h3 className="text-base font-semibold text-stone-900 flex items-center space-x-2">
+                <History className="w-4 h-4 text-stone-500" />
+                <span>Historique des fabrications & traçabilité</span>
+              </h3>
+              {onClearHistory && batches.length > 0 && (
+                <button
+                  type="button"
+                  onClick={onClearHistory}
+                  className="inline-flex items-center gap-1.5 text-xs font-medium text-rose-600 hover:text-rose-800 whitespace-nowrap"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  <span>Vider l’historique</span>
+                </button>
+              )}
+            </div>
             <p className="text-xs text-stone-500 mb-4">
               Chaque lot consigné a déduit ses matières premières correspondantes du stock d'atelier
             </p>
@@ -648,7 +657,11 @@ export const FabricationView: React.FC<FabricationViewProps> = ({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-stone-100">
-                  {batches.map((b) => (
+                  {batches.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="py-8 text-center text-stone-400">Aucune fabrication enregistrée.</td>
+                    </tr>
+                  ) : batches.map((b) => (
                     <tr key={b.id} className="hover:bg-stone-50/50">
                       <td className="py-2.5 font-mono font-medium text-stone-800">{b.batchNumber}</td>
                       <td className="py-2.5 text-stone-700 font-medium">{b.productName}</td>

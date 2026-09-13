@@ -57,7 +57,7 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
 
   return (
     <div
-      className="relative h-full w-full overflow-hidden"
+      className="group relative h-full w-full overflow-hidden bg-[#e9f2ef]"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
       onMouseEnter={() => setIsPaused(true)}
@@ -70,15 +70,16 @@ export const ProductCarousel: React.FC<ProductCarouselProps> = ({
           src={slide}
           alt={`${name} - vue ${index + 1}`}
           referrerPolicy="no-referrer"
-          className={`absolute inset-0 h-full w-full object-cover object-center transition-opacity ease-in-out duration-[1200ms] ${
+          className={`absolute inset-0 h-full w-full object-cover object-center transition-[opacity,transform] ease-out duration-[900ms] ${
             index === activeIndex ? 'opacity-100' : 'opacity-0'
           }`}
         />
       ))}
 
-      {/* Léger voile dégradé en bas pour la lisibilité des points */}
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.16),transparent_35%,rgba(8,48,39,0.18))]" />
+
       {hasMultipleSlides && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/25 to-transparent" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-emerald-950/35 to-transparent" />
       )}
 
       {hasMultipleSlides && (

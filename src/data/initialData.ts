@@ -1,24 +1,30 @@
 import { Product, RawMaterial, FabricationBatch, PurchaseOrder } from '../types';
 
-import imgLaveVitre from '../assets/images/cleannet_lave_vitre_1788983334122.jpg';
-import imgLaveVitreBrillance from '../assets/images/cleannet_lave_vitre_brillance_1788989127650.jpg';
-import imgLaveSol from '../assets/images/cleannet_lave_sol_1788983347384.jpg';
-import imgLaveMain from '../assets/images/cleannet_lave_main_1788983356709.jpg';
-import imgGelWc from '../assets/images/cleannet_gel_wc_1788983366984.jpg';
-import imgMultiTache from '../assets/images/cleannet_multi_tache_1788983378409.jpg';
-import imgDesodorisant from '../assets/images/cleannet_desodorisant_1788983390157.jpg';
-import imgLiquideVaisselle from '../assets/images/cleannet_liquide_vaisselle_1788983916917.jpg';
+import imgLaveVitre from '../assets/images/cleanN/lave-vitre.jpg';
+import imgLaveVitreBrillance from '../assets/images/cleanN/lave-vitre1.jpg';
+import imgLaveSol from '../assets/images/cleanN/lave-sol.jpg';
+import imgLaveSolBleu from '../assets/images/cleanN/lave-sol1.jpg';
+import imgLaveMain from '../assets/images/cleanN/lave-main.jpg';
+import imgLaveMainBleu from '../assets/images/cleanN/lave-main1.jpg';
+import imgGelWc from '../assets/images/cleanN/gel-wc.jpg';
+import imgGelWc1 from '../assets/images/cleanN/gel-wc1.jpg';
+import imgGelWc2 from '../assets/images/cleanN/gel-wc2.jpg';
+import imgMultiTache from '../assets/images/cleanN/multi-tache.jpg';
+import imgMultiTacheRouge from '../assets/images/cleanN/multi-tache1.jpg';
+import imgDesodorisant from '../assets/images/cleanN/air-net.jpg';
+import imgLiquideVaisselle from '../assets/images/cleanN/lave-vaisselle.jpg';
+import imgLiquideVaisselleCollection from '../assets/images/cleanN/lave-vaisselle1.jpg';
 
 export const initialProducts: Product[] = [
   {
     id: 'lave-vitre',
-    name: 'Lave vitre',
+    name: 'BrillanceNet',
     image: imgLaveVitre,
     images: [imgLaveVitre, imgLaveVitreBrillance],
     priceFormatted: '1 200 FCFA / 750 ml',
     unitPrice: 1200,
     unit: 'flacon 750ml',
-    category: 'Surfaces vitrées',
+    category: 'Lave-vitres',
     description: 'Formule anti-traces à séchage ultra-rapide à base d’éthanol et vinaigre blanc purifié. Brillance sans voile ni reflet.',
     ph: '6.5 - 7.0',
     packaging: 'Flacon 750ml avec pulvérisateur + Étiquette CleanNet',
@@ -40,12 +46,13 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'laves-sol',
-    name: 'Laves Sol',
+    name: 'Eclat Net',
     image: imgLaveSol,
+    images: [imgLaveSol, imgLaveSolBleu],
     priceFormatted: '1 500 FCFA / L',
     unitPrice: 1500,
     unit: 'bidon 1L',
-    category: 'Sols & Carrelages',
+    category: 'Lave-sol',
     description: 'Détergent parfumant haute rémanence pour sols carrelés et marbres. Formulé avec Texapon et parfum frais longue durée.',
     ph: '7.0 - 7.5',
     packaging: 'Bidon de 1L avec bouchon doseur + Étiquette CleanNet',
@@ -64,12 +71,13 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'lave-main',
-    name: 'Lave main',
+    name: 'Main Net',
     image: imgLaveMain,
+    images: [imgLaveMain, imgLaveMainBleu],
     priceFormatted: '1 800 FCFA / 500 ml',
     unitPrice: 1800,
     unit: 'flacon 500ml',
-    category: 'Hygiène & Soin',
+    category: 'Lave-mains',
     description: 'Savon liquide onctueux enrichi à la glycérine végétale adoucissante pour le respect épidermique.',
     ph: '5.5 (physiologique)',
     packaging: 'Flacon pompe ambré 500ml + Étiquette CleanNet',
@@ -92,12 +100,13 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'gel-wc',
-    name: 'Gel WC',
+    name: 'WC Net',
     image: imgGelWc,
+    images: [imgGelWc, imgGelWc1, imgGelWc2],
     priceFormatted: '1 400 FCFA / 750 ml',
     unitPrice: 1400,
     unit: 'flacon 750ml',
-    category: 'Sanitaires & Céramique',
+    category: 'Gel WC',
     description: 'Gel désincrustant et détartrant haute adhérence sur parois verticales. Élimine le tartre et rafraîchit à la menthe.',
     ph: '2.0 - 2.5',
     packaging: 'Flacon coudé 750ml sécurisé + Étiquette CleanNet',
@@ -116,12 +125,13 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'nettoyant-multitache',
-    name: 'Nettoyant multitâche',
+    name: 'Savon Liquide Multi-tâche',
     image: imgMultiTache,
+    images: [imgMultiTache, imgMultiTacheRouge],
     priceFormatted: '1 600 FCFA / 750 ml',
     unitPrice: 1600,
     unit: 'flacon 750ml',
-    category: 'Multi-Surfaces',
+    category: 'Multi-tâche',
     description: 'Dégraissant polyvalent universel pour plans de travail, tables, appareils électroménagers et plastiques.',
     ph: '7.0',
     packaging: 'Flacon 750ml avec vaporisateur + Étiquette CleanNet',
@@ -148,12 +158,12 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'desodorisant',
-    name: 'Désodorisant',
+    name: 'Air Net',
     image: imgDesodorisant,
     priceFormatted: '2 000 FCFA / 300 ml',
     unitPrice: 2000,
     unit: 'spray 300ml',
-    category: 'Ambiance & Parfum',
+    category: 'Désodorisant',
     description: 'Brumisateur d’ambiance d’intérieur neutraliseur d’odeurs avec extrait de parfum naturel fin.',
     ph: '6.0',
     packaging: 'Flacon aluminium brossé 300ml + Étiquette CleanNet',
@@ -171,12 +181,13 @@ export const initialProducts: Product[] = [
   },
   {
     id: 'liquide-vaisselle',
-    name: 'Liquide vaisselle',
+    name: 'Vaisselle Net',
     image: imgLiquideVaisselle,
+    images: [imgLiquideVaisselle, imgLiquideVaisselleCollection],
     priceFormatted: '1 300 FCFA / 1L',
     unitPrice: 1300,
     unit: 'bidon 1L',
-    category: 'Vaisselle & Cuisine',
+    category: 'Liquide vaisselle',
     description: 'Détergent liquide ultra-dégraissant pour la vaisselle à mousse active et rinçage aisé, enrichi à la glycérine.',
     ph: '6.8 - 7.2',
     packaging: 'Bidon de 1L ou Flacon push-pull + Étiquette CleanNet',
