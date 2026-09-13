@@ -3,7 +3,6 @@ import { RawMaterial, StockStatus } from '../types';
 import {
   Search,
   Plus,
-  ShoppingCart,
   Droplets,
   Palette,
   Check,
@@ -623,7 +622,7 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
                       <span className="text-[11px] text-stone-400 block">{material.category}</span>
                     </td>
 
-                    {/* Stock actuel DYNAMIQUE (Direct inline click-to-edit or quick +/-) */}
+                    {/* Stock actuel dynamique, modifiable en cliquant sur la valeur */}
                     <td className="py-3.5 px-4 text-right">
                       {isEditing ? (
                         <div className="inline-flex items-center space-x-1 justify-end">
@@ -656,20 +655,7 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
                           </button>
                         </div>
                       ) : (
-                        <div className="inline-flex items-center space-x-1 justify-end">
-                          <button
-                            onClick={() =>
-                              onUpdateStock(
-                                material.id,
-                                Math.max(0, Number((material.currentStock - 10).toFixed(2)))
-                              )
-                            }
-                            className="w-5 h-5 rounded bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs flex items-center justify-center transition-colors"
-                            title="Diminuer de 10"
-                          >
-                            -
-                          </button>
-
+                        <div className="inline-flex items-center justify-end">
                           <span
                             onClick={() => {
                               setInlineEditId(material.id);
@@ -686,19 +672,6 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
                           >
                             {material.currentStock} {material.unit}
                           </span>
-
-                          <button
-                            onClick={() =>
-                              onUpdateStock(
-                                material.id,
-                                Number((material.currentStock + 10).toFixed(2))
-                              )
-                            }
-                            className="w-5 h-5 rounded bg-stone-100 hover:bg-stone-200 text-stone-600 text-xs flex items-center justify-center transition-colors"
-                            title="Augmenter de 10"
-                          >
-                            +
-                          </button>
                         </div>
                       )}
                     </td>
@@ -726,7 +699,7 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
                       {material.supplier}
                     </td>
 
-                    {/* Actions: Ajuster, Commander, Éditer, Supprimer */}
+                    {/* Actions: Ajuster, Éditer, Supprimer */}
                     <td className="py-3.5 px-4 text-center">
                       <div className="inline-flex items-center space-x-1.5">
                         {/* Quick Stock Adjustment */}
@@ -741,22 +714,6 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
                         >
                           <RefreshCw className="w-3.5 h-3.5" />
                         </button>
-
-                        {/* Approvisionner (Go to Achats with pre-selected material) */}
-                        {onGoToAchatsWithMaterial && (
-                          <button
-                            onClick={() => onGoToAchatsWithMaterial(material.id)}
-                            className={`inline-flex items-center space-x-1 text-xs px-2.5 py-1 rounded-lg transition-colors font-medium ${
-                              status !== 'available'
-                                ? 'bg-stone-900 text-stone-50 hover:bg-stone-800 shadow-2xs'
-                                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-                            }`}
-                            title="Commander cette matière"
-                          >
-                            <ShoppingCart className="w-3 h-3" />
-                            <span>Approvisionner</span>
-                          </button>
-                        )}
 
                         {/* Edit Material Details */}
                         {onUpdateMaterial && (
