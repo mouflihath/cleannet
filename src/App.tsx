@@ -67,7 +67,13 @@ export default function App() {
   const handleGoogleLogout = () => {
     setGoogleUser(null);
     localStorage.removeItem('cleannet_google_user');
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('cleannet_')) {
+        localStorage.removeItem(key);
+      }
+    });
     window.google?.accounts.id.disableAutoSelect();
+    window.google?.accounts.id.prompt();
   };
 
   // Dynamic state with localStorage persistence
