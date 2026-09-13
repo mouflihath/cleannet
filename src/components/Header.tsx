@@ -17,7 +17,7 @@ declare global {
     google?: {
       accounts: {
         id: {
-          initialize: (options: { client_id: string; callback: (response: { credential: string }) => void }) => void;
+          initialize: (options: { client_id: string; callback: (response: { credential: string }) => void; auto_select?: boolean; context?: string }) => void;
           renderButton: (element: HTMLElement, options: Record<string, string>) => void;
           prompt: () => void;
           disableAutoSelect: () => void;
@@ -37,6 +37,8 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
     window.google.accounts.id.initialize({
       client_id: '362664635286-sfa3cescvt9nu6tltel783rmd4ilht4u.apps.googleusercontent.com',
       callback: ({ credential }) => onGoogleLogin(credential),
+      auto_select: false,
+      context: 'signin',
     });
     const buttonOptions = {
       type: 'standard',
