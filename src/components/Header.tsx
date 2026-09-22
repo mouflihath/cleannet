@@ -72,7 +72,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
   return (
     <header className="sticky top-0 z-40 bg-[#FBFBFA]/90 backdrop-blur-md border-b border-stone-200/80 transition-colors">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo CleanNet - Official Brand Identity */}
           <button
             onClick={() => handleTabClick('accueil')}
@@ -155,30 +155,20 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
             )}
           </div>
 
-          {/* Mobile account and menu */}
-          <div className="md:hidden flex items-center gap-2 relative">
+          {/* Mobile account (top right) */}
+          <div className="md:hidden flex items-center justify-end gap-2 relative min-w-0">
             {!googleUser ? (
-              <div ref={mobileGoogleButtonRef} className="min-h-10 max-w-[190px]" />
+              <div ref={mobileGoogleButtonRef} className="min-h-10 max-w-[170px]" />
             ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setProfileMenuOpen((prev) => !prev)}
-                  className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1.5 text-[11px] text-stone-700 shadow-sm"
-                  title="Profil utilisateur"
-                >
-                  {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full" />}
-                  <span className="max-w-[100px] truncate">{googleUser.email}</span>
-                </button>
-                <button
-                  onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                  id="mobile-menu-toggle"
-                  className="p-2 rounded-lg text-stone-600 hover:text-stone-900 hover:bg-stone-100 focus:outline-none"
-                  aria-label="Menu"
-                >
-                  {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                </button>
-              </>
+              <button
+                type="button"
+                onClick={() => setProfileMenuOpen((prev) => !prev)}
+                className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1.5 text-[11px] text-stone-700 shadow-sm max-w-[170px]"
+                title="Profil utilisateur"
+              >
+                {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full shrink-0" />}
+                <span className="truncate">{googleUser.email}</span>
+              </button>
             )}
           </div>
         </div>
@@ -213,33 +203,9 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
         </div>
       )}
 
-      {/* Mobile Menu Dropdown */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-stone-200 bg-[#FBFBFA] px-4 pt-3 pb-5 space-y-1 shadow-lg">
-          {navItems.map((item) => {
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                id={`mobile-nav-${item.id}`}
-                onClick={() => handleTabClick(item.id)}
-                className={`w-full flex items-center space-x-3 px-4 py-3 rounded-xl text-left text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-stone-900 text-stone-50'
-                    : 'text-stone-700 hover:bg-stone-100'
-                }`}
-              >
-                <span>{item.icon}</span>
-                <span>{item.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
       {googleUser && (
-        <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-stone-200 bg-[#FBFBFA]/95 backdrop-blur-md">
-          <div className="mx-auto grid max-w-md grid-cols-5 gap-1 p-2">
+        <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-stone-200 bg-[#FBFBFA]/95 backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.06)]">
+          <div className="mx-auto grid max-w-md grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
