@@ -20,6 +20,7 @@ declare global {
           initialize: (options: { client_id: string; callback: (response: { credential: string }) => void; auto_select?: boolean; context?: string }) => void;
           renderButton: (element: HTMLElement, options: Record<string, string>) => void;
           prompt: () => void;
+          cancel: () => void;
           disableAutoSelect: () => void;
         };
       };
@@ -33,11 +34,26 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const mobileGoogleButtonRef = useRef<HTMLDivElement>(null);
 
+  const clearGoogleInterface = () => {
+    window.google?.accounts.id.cancel();
+    [googleButtonRef.current, mobileGoogleButtonRef.current, authButtonTargetRef?.current].forEach((container) => {
+      if (container) container.innerHTML = '';
+    });
+  };
+
   useEffect(() => {
-    if (!onGoogleLogin || googleUser || !window.google) return;
+    if (googleUser) {
+      clearGoogleInterface();
+      setProfileMenuOpen(false);
+      return;
+    }
+    if (!onGoogleLogin || !window.google) return;
     window.google.accounts.id.initialize({
       client_id: '362664635286-sfa3cescvt9nu6tltel783rmd4ilht4u.apps.googleusercontent.com',
-      callback: ({ credential }) => onGoogleLogin(credential),
+      callback: ({ credential }) => {
+        clearGoogleInterface();
+        onGoogleLogin(credential);
+      },
       auto_select: false,
       context: 'signin',
     });
