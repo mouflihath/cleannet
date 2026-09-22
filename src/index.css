@@ -28,6 +28,10 @@ input[type='number'] {
 }
 
 @media (max-width: 767px) {
+  body {
+    padding-bottom: 76px;
+  }
+
   .mobile-bottom-nav {
     position: fixed !important;
     left: 0 !important;
@@ -35,6 +39,23 @@ input[type='number'] {
     bottom: 0 !important;
     top: auto !important;
     display: block !important;
+    width: 100% !important;
+    height: 68px !important;
+    z-index: 9999 !important;
+    border-top: 1px solid #e7e5e4;
+    background: rgba(251, 251, 250, 0.98);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(12px);
+  }
+
+  .mobile-bottom-nav__inner {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+    width: min(100%, 520px);
+    height: 100%;
+    margin: 0 auto;
+    padding: 6px 8px max(6px, env(safe-area-inset-bottom));
   }
 }
 

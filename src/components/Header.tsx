@@ -75,7 +75,8 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#FBFBFA]/90 backdrop-blur-md border-b border-stone-200/80 transition-colors">
+    <>
+      <header className="sticky top-0 z-40 bg-[#FBFBFA]/90 backdrop-blur-md border-b border-stone-200/80 transition-colors">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo CleanNet - Official Brand Identity */}
@@ -228,8 +229,10 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
         </div>
       )}
 
-      <nav className="mobile-bottom-nav md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-stone-200 bg-[#FBFBFA]/95 backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.06)]">
-          <div className="mx-auto grid max-w-md grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+      </header>
+
+      <nav className="mobile-bottom-nav md:hidden" aria-label="Navigation principale mobile">
+        <div className="mobile-bottom-nav__inner">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
@@ -248,8 +251,8 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
                 </button>
               );
             })}
-          </div>
+        </div>
       </nav>
-    </header>
+    </>
   );
 };
