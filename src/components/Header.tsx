@@ -186,11 +186,12 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
                 </button>
               </>
             ) : (
-              <button
+                <button
                 type="button"
                 onClick={() => setProfileMenuOpen((prev) => !prev)}
-                className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1.5 text-[11px] text-stone-700 shadow-sm max-w-[170px]"
-                title="Profil utilisateur"
+                  className="relative z-[10001] flex min-h-10 max-w-[190px] cursor-pointer items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1.5 text-[11px] text-stone-700 shadow-sm pointer-events-auto"
+                  title="Ouvrir le profil et la déconnexion"
+                  aria-label={`Ouvrir le profil de ${googleUser.email}`}
               >
                 {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full shrink-0" />}
                 <span className="truncate">{googleUser.email}</span>
@@ -201,11 +202,11 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
       </div>
 
       {profileMenuOpen && googleUser && (
-        <div className="fixed inset-0 z-40 bg-stone-900/10 md:hidden" onClick={() => setProfileMenuOpen(false)} />
+        <div className="fixed inset-0 z-[10000] bg-stone-900/10 md:hidden" onClick={() => setProfileMenuOpen(false)} />
       )}
 
       {profileMenuOpen && googleUser && (
-        <div className="fixed inset-x-4 bottom-20 z-50 md:hidden">
+        <div className="fixed inset-x-4 bottom-20 z-[10002] md:hidden">
           <div className="rounded-2xl border border-stone-200 bg-white p-3 shadow-xl">
             <div className="mb-2 rounded-xl bg-stone-50 px-3 py-2 text-xs text-stone-600">
               <div className="flex items-center gap-2 text-stone-800 font-medium">
