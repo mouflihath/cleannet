@@ -27,6 +27,17 @@ input[type='number'] {
   -moz-appearance: textfield;
 }
 
+@media (max-width: 767px) {
+  .mobile-bottom-nav {
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    top: auto !important;
+    display: block !important;
+  }
+}
+
 /* Elegant subtle scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
