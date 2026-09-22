@@ -91,7 +91,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
           </button>
 
           {/* Desktop Navigation */}
-          {googleUser && <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
               return (
@@ -112,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
                 </button>
               );
             })}
-          </nav>}
+          </nav>
 
           <div className="hidden md:flex items-center gap-2 relative">
             {googleUser ? (
@@ -203,8 +203,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
         </div>
       )}
 
-      {googleUser && (
-        <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-stone-200 bg-[#FBFBFA]/95 backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.06)]">
+      <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-stone-200 bg-[#FBFBFA]/95 backdrop-blur-md shadow-[0_-8px_24px_rgba(0,0,0,0.06)]">
           <div className="mx-auto grid max-w-md grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
             {navItems.map((item) => {
               const isActive = activeTab === item.id;
@@ -225,8 +224,7 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
               );
             })}
           </div>
-        </nav>
-      )}
+      </nav>
     </header>
   );
 };
