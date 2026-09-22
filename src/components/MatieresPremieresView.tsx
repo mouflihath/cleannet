@@ -460,9 +460,9 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
       </div>
 
       {/* Sub-tabs, Search & Dynamic Sort Bar */}
-      <div className="flex flex-col lg:flex-row gap-3 mb-6 items-stretch lg:items-center justify-between">
+      <div className="flex w-full min-w-0 flex-col lg:flex-row gap-3 mb-6 items-stretch lg:items-center justify-between">
         {/* Navigation Categories Tabs */}
-        <div className="flex flex-wrap gap-1.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80">
+        <div className="flex w-full min-w-0 flex-wrap gap-1.5 bg-stone-100/90 p-1 rounded-xl border border-stone-200/80 lg:w-auto">
           <button
             onClick={() => setActiveSubTab('all')}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
@@ -514,9 +514,9 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
         </div>
 
         {/* Controls: Search, Status Filter, Dynamic Sort */}
-        <div className="flex flex-wrap items-center gap-2 flex-1 lg:max-w-xl justify-end">
+        <div className="flex w-full min-w-0 flex-wrap items-center gap-2 flex-1 lg:max-w-xl justify-end">
           {/* Search input */}
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative flex-1 min-w-0 md:min-w-[200px]">
             <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-stone-400" />
             <input
               type="text"

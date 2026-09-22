@@ -1,7 +1,14 @@
 @import "tailwindcss";
 
 @layer base {
-  body {
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    max-width: 100%;
+    overflow-x: hidden;
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background-color: #f4f7f4;
     background-image: radial-gradient(circle at 8% 0%, rgba(184, 220, 198, 0.32), transparent 28rem), radial-gradient(circle at 92% 12%, rgba(244, 211, 144, 0.2), transparent 24rem);
