@@ -26,19 +26,52 @@ const classifyProduct = (product: Product): Product => {
     .toLowerCase();
 
   let category = product.category;
-  if (name.includes('brillancenet') || name.includes('lave vitre') || name.includes('lave-vitres')) {
+
+  if (
+    name.includes('brillancenet') ||
+    name.includes('brillance') ||
+    name.includes('lave vitre') ||
+    name.includes('lave-vitres')
+  ) {
     category = 'Lave-vitres';
-  } else if (name.includes('eclat net') || name.includes('lave sol') || name.includes('lave-sol')) {
+  } else if (
+    name.includes('eclat net') ||
+    name.includes('lave sol') ||
+    name.includes('lave-sol') ||
+    name.includes('sol net')
+  ) {
     category = 'Lave-sol';
-  } else if (name.includes('main net') || name.includes('lave main') || name.includes('lave-mains')) {
+  } else if (
+    name.includes('main net') ||
+    name.includes('lave main') ||
+    name.includes('lave-mains') ||
+    name.includes('main')
+  ) {
     category = 'Lave-mains';
-  } else if (name.includes('wc net') || name.includes('gel wc')) {
+  } else if (
+    name.includes('wc net') ||
+    name.includes('gel wc') ||
+    name.includes('wc')
+  ) {
     category = 'Gel WC';
-  } else if (name.includes('multi') || name.includes('multitache') || name.includes('multi-tache')) {
+  } else if (
+    name.includes('multi') ||
+    name.includes('multitache') ||
+    name.includes('multi-tache') ||
+    name.includes('savon liquide multi')
+  ) {
     category = 'Multi-tâche';
-  } else if (name.includes('air net') || name.includes('desodorisant')) {
+  } else if (
+    name.includes('air net') ||
+    name.includes('airnet') ||
+    name.includes('desodorisant')
+  ) {
     category = 'Désodorisant';
-  } else if (name.includes('vaisselle net') || name.includes('vaisselle')) {
+  } else if (
+    name.includes('vaisselle net') ||
+    name.includes('vaisselle') ||
+    name.includes('vaisselle net')
+  ) {
     category = 'Liquide vaisselle';
   }
 

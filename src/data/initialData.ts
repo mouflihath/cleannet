@@ -1,19 +1,19 @@
 import { Product, RawMaterial, FabricationBatch, PurchaseOrder } from '../types';
 
-import imgLaveVitre from '../assets/images/cleanN/lave-vitre.jpg';
-import imgLaveVitreBrillance from '../assets/images/cleanN/lave-vitre1.jpg';
-import imgLaveSol from '../assets/images/cleanN/lave-sol.jpg';
-import imgLaveSolBleu from '../assets/images/cleanN/lave-sol1.jpg';
-import imgLaveMain from '../assets/images/cleanN/lave-main.jpg';
-import imgLaveMainBleu from '../assets/images/cleanN/lave-main1.jpg';
+import imgLaveVitre from '../assets/images/cleanN/vitre1.png';
+import imgLaveVitreBrillance from '../assets/images/cleanN/vitre2.png';
+import imgLaveSol from '../assets/images/cleanN/sol1.png';
+import imgLaveSolBleu from '../assets/images/cleanN/sol2.png';
+import imgLaveMain from '../assets/images/cleanN/main1.png';
+import imgLaveMainBleu from '../assets/images/cleanN/main2.png';
 import imgGelWc from '../assets/images/cleanN/gel-wc.jpg';
-import imgGelWc1 from '../assets/images/cleanN/gel-wc1.jpg';
-import imgGelWc2 from '../assets/images/cleanN/gel-wc2.jpg';
-import imgMultiTache from '../assets/images/cleanN/multi-tache.jpg';
-import imgMultiTacheRouge from '../assets/images/cleanN/multi-tache1.jpg';
-import imgDesodorisant from '../assets/images/cleanN/air-net.jpg';
-import imgLiquideVaisselle from '../assets/images/cleanN/lave-vaisselle.jpg';
-import imgLiquideVaisselleCollection from '../assets/images/cleanN/lave-vaisselle1.jpg';
+import imgGelWc1 from '../assets/images/cleanN/wc1.png';
+import imgGelWc2 from '../assets/images/cleanN/wv2.png';
+import imgMultiTache from '../assets/images/cleanN/multi1.png';
+import imgMultiTacheRouge from '../assets/images/cleanN/multi2.png';
+import imgDesodorisant from '../assets/images/cleanN/deso1.png';
+import imgLiquideVaisselle from '../assets/images/cleanN/vaisselle1.png';
+import imgLiquideVaisselleCollection from '../assets/images/cleanN/vaisselle2.png';
 
 export const initialProducts: Product[] = [
   {
