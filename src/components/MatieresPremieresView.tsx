@@ -75,6 +75,18 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
   };
 
   // Dynamic KPIs calculated in real time
+  const scrollToMaterialsList = () => {
+    const el = document.getElementById('materials-list');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const applyStatusFilter = (nextFilter: 'all' | 'available' | 'low' | 'out') => {
+    setStatusFilter(nextFilter);
+    scrollToMaterialsList();
+  };
+
   const totalReferences = rawMaterials.length;
   const totalStockValue = rawMaterials.reduce(
     (acc, m) => acc + m.currentStock * m.unitCost,
@@ -287,6 +299,7 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
           onClick={() => {
             setStatusFilter('all');
             setActiveSubTab('all');
+            scrollToMaterialsList();
           }}
           className="p-4 bg-white rounded-2xl border border-stone-200/80 hover:border-stone-400 cursor-pointer transition-all shadow-xs"
         >
@@ -314,7 +327,7 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
 
         {/* Sufficient / Available */}
         <div
-          onClick={() => setStatusFilter(statusFilter === 'available' ? 'all' : 'available')}
+          onClick={() => applyStatusFilter(statusFilter === 'available' ? 'all' : 'available')}
           className={`p-4 rounded-2xl border cursor-pointer transition-all shadow-xs ${
             statusFilter === 'available'
               ? 'bg-emerald-50 border-emerald-300 ring-2 ring-emerald-500/20'
@@ -333,7 +346,7 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
 
         {/* Alerts / Low or Out */}
         <div
-          onClick={() => setStatusFilter(statusFilter === 'low' ? 'all' : 'low')}
+          onClick={() => applyStatusFilter(statusFilter === 'low' || statusFilter === 'out' ? 'all' : 'low')}
           className={`p-4 rounded-2xl border cursor-pointer transition-all shadow-xs ${
             statusFilter === 'low' || statusFilter === 'out'
               ? 'bg-amber-50 border-amber-300 ring-2 ring-amber-500/20'
@@ -566,7 +579,7 @@ export const MatieresPremieresView: React.FC<MatieresPremieresViewProps> = ({
       </div>
 
       {/* Main Dynamic Table */}
-      <div className="bg-white rounded-2xl border border-stone-200/80 overflow-hidden shadow-sm">
+      <div id="materials-list" className="bg-white rounded-2xl border border-stone-200/80 overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead className="bg-stone-50/80 text-xs text-stone-500 uppercase tracking-wider border-b border-stone-200">

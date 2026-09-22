@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavTab } from '../types';
-import { Home, Sparkles, Layers, Factory, ShoppingCart, Menu, X } from 'lucide-react';
+import { Home, Sparkles, Layers, Factory, ShoppingCart, Menu, X, LogOut, User } from 'lucide-react';
 
 interface HeaderProps {
   activeTab: NavTab;
@@ -29,6 +29,7 @@ declare global {
 
 export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNavigate, googleUser, onGoogleLogin, onGoogleLogout, authButtonTargetRef }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const googleButtonRef = useRef<HTMLDivElement>(null);
   const mobileGoogleButtonRef = useRef<HTMLDivElement>(null);
 
@@ -113,25 +114,61 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
             })}
           </nav>}
 
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2 relative">
             {googleUser ? (
-              <button type="button" onClick={onGoogleLogout} className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1 text-xs text-stone-700 hover:border-stone-400" title="Se déconnecter">
-                {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full" />}
-                <span className="max-w-28 truncate">{googleUser.name}</span>
-              </button>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setProfileMenuOpen((prev) => !prev)}
+                  className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1 text-xs text-stone-700 hover:border-stone-400"
+                  title="Profil utilisateur"
+                >
+                  {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full" />}
+                  <span className="max-w-28 truncate">{googleUser.name}</span>
+                </button>
+
+                {profileMenuOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-64 rounded-2xl border border-stone-200 bg-white p-2 shadow-xl">
+                    <div className="mb-2 px-2 py-2 rounded-xl bg-stone-50 text-xs text-stone-600">
+                      <div className="flex items-center gap-2 text-stone-800 font-medium">
+                        <User className="w-3.5 h-3.5" />
+                        <span>{googleUser.name}</span>
+                      </div>
+                      <p className="mt-1 truncate text-[11px] text-stone-500">{googleUser.email}</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setProfileMenuOpen(false);
+                        onGoogleLogout?.();
+                      }}
+                      className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-3 py-2 text-xs font-medium text-white hover:bg-stone-800"
+                    >
+                      <LogOut className="w-3.5 h-3.5" />
+                      Se déconnecter
+                    </button>
+                  </div>
+                )}
+              </div>
             ) : (
               <div ref={googleButtonRef} />
             )}
           </div>
 
           {/* Mobile account and menu */}
-          <div className="md:hidden flex items-center gap-2">
+          <div className="md:hidden flex items-center gap-2 relative">
             {!googleUser ? (
               <div ref={mobileGoogleButtonRef} className="min-h-10 max-w-[190px]" />
             ) : (
               <>
-                <button type="button" onClick={onGoogleLogout} className="flex items-center rounded-full border border-stone-200 bg-white p-1" title="Se déconnecter">
+                <button
+                  type="button"
+                  onClick={() => setProfileMenuOpen((prev) => !prev)}
+                  className="flex items-center gap-2 rounded-full border border-stone-200 bg-white px-2 py-1.5 text-[11px] text-stone-700 shadow-sm"
+                  title="Profil utilisateur"
+                >
                   {googleUser.picture && <img src={googleUser.picture} alt="" className="h-7 w-7 rounded-full" />}
+                  <span className="max-w-[100px] truncate">{googleUser.email}</span>
                 </button>
                 <button
                   onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -146,6 +183,35 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
           </div>
         </div>
       </div>
+
+      {profileMenuOpen && googleUser && (
+        <div className="fixed inset-0 z-40 bg-stone-900/10 md:hidden" onClick={() => setProfileMenuOpen(false)} />
+      )}
+
+      {profileMenuOpen && googleUser && (
+        <div className="fixed inset-x-4 bottom-20 z-50 md:hidden">
+          <div className="rounded-2xl border border-stone-200 bg-white p-3 shadow-xl">
+            <div className="mb-2 rounded-xl bg-stone-50 px-3 py-2 text-xs text-stone-600">
+              <div className="flex items-center gap-2 text-stone-800 font-medium">
+                <User className="w-3.5 h-3.5" />
+                <span>{googleUser.name}</span>
+              </div>
+              <p className="mt-1 truncate text-[11px] text-stone-500">{googleUser.email}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setProfileMenuOpen(false);
+                onGoogleLogout?.();
+              }}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-stone-900 px-3 py-2.5 text-sm font-medium text-white"
+            >
+              <LogOut className="w-4 h-4" />
+              Se déconnecter
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
@@ -169,6 +235,31 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, onSelectTab, onNaviga
             );
           })}
         </div>
+      )}
+
+      {googleUser && (
+        <nav className="md:hidden fixed inset-x-0 bottom-0 z-50 border-t border-stone-200 bg-[#FBFBFA]/95 backdrop-blur-md">
+          <div className="mx-auto grid max-w-md grid-cols-5 gap-1 p-2">
+            {navItems.map((item) => {
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  id={`bottom-nav-${item.id}`}
+                  onClick={() => handleTabClick(item.id)}
+                  className={`flex flex-col items-center justify-center rounded-xl px-1 py-2 text-[10px] font-medium transition-colors ${
+                    isActive
+                      ? 'bg-stone-900 text-stone-50'
+                      : 'text-stone-600 hover:bg-stone-100'
+                  }`}
+                >
+                  <span>{item.icon}</span>
+                  <span className="mt-1 leading-tight text-center">{item.label}</span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
       )}
     </header>
   );
